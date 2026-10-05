@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -54,13 +54,15 @@ export default function PublicHeader() {
      FERMETURE AUTOMATIQUE DE LA RECHERCHE
      AU CHANGEMENT DE PAGE
 
-     On utilise useEffect au lieu de modifier un state
-     directement pendant le rendu React.
+     La recherche se ferme lorsque le chemin change.
      ======================================================= */
 
-  useEffect(() => {
+  const [previousPathname, setPreviousPathname] = useState(pathname);
+
+  if (previousPathname !== pathname) {
+    setPreviousPathname(pathname);
     setSearchOpen(false);
-  }, [pathname]);
+  }
 
   /* =======================================================
      RECHERCHE

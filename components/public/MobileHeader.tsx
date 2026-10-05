@@ -94,10 +94,13 @@ export default function MobileHeader() {
      FERMETURE AU CHANGEMENT DE PAGE
      ======================================================= */
 
-  useEffect(() => {
+  const [previousPathname, setPreviousPathname] = useState(pathname);
+
+  if (previousPathname !== pathname) {
+    setPreviousPathname(pathname);
     setMenuOpen(false);
     setSearchOpen(false);
-  }, [pathname]);
+  }
 
   /* =======================================================
      FOCUS AUTOMATIQUE SUR LA RECHERCHE
