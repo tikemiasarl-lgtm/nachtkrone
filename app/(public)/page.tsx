@@ -37,15 +37,8 @@ export const metadata: Metadata = {
     "Entdecke ausgewählte Krampus-Masken, Kostüme und komplette Sets bei NACHTKRONE.",
 };
 
-/* =========================================================
-   REVALIDATION
-
-   La page peut être régénérée régulièrement afin que
-   les nouveaux produits publiés apparaissent sans rendre
-   toute la page inutilement dynamique à chaque visite.
-   ========================================================= */
-
-export const revalidate = 60;
+// Les produits sont charg?s ? la requ?te, sans acc?s ? la base pendant le build.
+export const dynamic = "force-dynamic";
 
 /* =========================================================
    NOMBRE DE PRODUITS SUR L'ACCUEIL
