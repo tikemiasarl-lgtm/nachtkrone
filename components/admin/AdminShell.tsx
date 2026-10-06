@@ -9,6 +9,8 @@ import {
 
 import { usePathname } from "next/navigation";
 
+import AdminAutoRefresh from "@/components/admin/AdminAutoRefresh";
+
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
@@ -174,6 +176,7 @@ export default function AdminShell({
         <main className="min-h-[calc(100vh-78px)]">
 
           <div className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+            <AdminAutoRefresh />
             {children}
           </div>
 

@@ -588,7 +588,7 @@ export default function HomeProducts({
     <section
       id="produkte"
       aria-labelledby="home-products-title"
-      className="bg-white py-12 sm:py-14 lg:py-16 xl:py-20"
+      className="scroll-mt-24 bg-white py-16 sm:py-20 lg:py-24"
     >
       <div
         className="

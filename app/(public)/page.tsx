@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import HomeBrandStory from "@/components/public/home/HomeBrandStory";
 import HomeHero from "@/components/public/home/HomeHero";
 import HomeProducts, {
   type HomeProduct,
@@ -123,6 +124,7 @@ export default async function HomePage() {
          ===================================================== */}
 
       <HomeHero />
+      <HomeTrustBar />
 
       {/* =====================================================
           PRODUITS
@@ -141,7 +143,7 @@ export default async function HomePage() {
           - contact WhatsApp
          ===================================================== */}
 
-      <HomeTrustBar />
+      <HomeBrandStory product={products[0]} />
     </>
   );
 }

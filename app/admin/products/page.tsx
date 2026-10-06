@@ -1,3 +1,4 @@
+import DeleteProductButton from "@/components/admin/DeleteProductButton";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -1011,6 +1012,7 @@ export default async function AdminProductsPage({
                     <th className="px-5 py-4 text-right text-[11px] font-extrabold uppercase tracking-[0.08em] text-slate-400">
                       Créé le
                     </th>
+                    <th className="px-5 py-4 text-left text-[11px] font-extrabold uppercase tracking-[0.08em] text-slate-400">Actions</th>
                   </tr>
                 </thead>
 
@@ -1144,6 +1146,7 @@ export default async function AdminProductsPage({
                             )}
                           </time>
                         </td>
+                        <td className="px-5 py-4"><DeleteProductButton productId={product.id} productName={product.name} /></td>
                       </tr>
                     )
                   )}
@@ -1266,6 +1269,7 @@ export default async function AdminProductsPage({
                       </span>
                     </div>
                   </div>
+                    <div className="px-4 pb-4"><DeleteProductButton productId={product.id} productName={product.name} /></div>
                 </article>
               )
             )}

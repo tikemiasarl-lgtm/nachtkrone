@@ -1,3 +1,4 @@
+import OrderContactDetails from "@/components/admin/OrderContactDetails";
 import Link from "next/link";
 import {
   Banknote,
@@ -438,6 +439,13 @@ export default async function AdminOrdersPage({
         customerEmail: true,
         customerPhone: true,
 
+        shippingFirstName: true,
+        shippingLastName: true,
+        shippingAddress: true,
+        shippingAddress2: true,
+        shippingPostalCode: true,
+        shippingState: true,
+        customerNote: true,
         shippingCity: true,
         shippingCountry: true,
 
@@ -972,6 +980,7 @@ export default async function AdminOrdersPage({
                               <p className="mt-0.5 max-w-[190px] truncate text-xs text-slate-400">
                                 {customerEmail}
                               </p>
+                              <OrderContactDetails order={order} />
                             </div>
                           </div>
                         </td>
@@ -1153,6 +1162,7 @@ export default async function AdminOrdersPage({
                         <p className="mt-0.5 truncate text-xs text-slate-400">
                           {customerEmail}
                         </p>
+                              <OrderContactDetails order={order} />
                       </div>
                     </div>
 
