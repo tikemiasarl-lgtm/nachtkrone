@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import {
   Check,
   Loader2,
@@ -134,6 +134,18 @@ function normalizeQuantity(
    COMPOSANT
    ========================================================= */
 
+function subscribeToOrigin() {
+  return () => {};
+}
+
+function getBrowserOrigin() {
+  return window.location.origin;
+}
+
+function getServerOrigin() {
+  return "";
+}
+
 export default function ProductActions({
   productId,
   productName,
@@ -213,27 +225,13 @@ export default function ProductActions({
         normalizedQuantity
       : null;
 
-  /* =======================================================
-     URL DU PRODUIT
-
-     Sur le navigateur :
-     on récupère l'origine réelle du site.
-
-     Exemple production :
-     https://nachtkrone-shop.com/produkte/...
-
-     Exemple local :
-     http://localhost:3000/produkte/...
-     ======================================================= */
-
-  const productUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/produkte/${encodeURIComponent(
-          productSlug
-        )}`
-      : `/produkte/${encodeURIComponent(
-          productSlug
-        )}`;
+  // Le serveur et le premier rendu client utilisent le m?me lien.
+  const origin = useSyncExternalStore(
+    subscribeToOrigin,
+    getBrowserOrigin,
+    getServerOrigin,
+  );
+  const productUrl = `${origin}/produkte/${encodeURIComponent(productSlug)}`;
 
   /* =======================================================
      MESSAGE WHATSAPP DE COMMANDE
