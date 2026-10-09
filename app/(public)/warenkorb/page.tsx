@@ -1,4 +1,33 @@
+
 import type { Metadata } from "next";
+
 import CartContents from "@/components/public/cart/CartContents";
-export const metadata: Metadata = {title: "Warenkorb | NACHTKRONE", robots: {index: false, follow: false}};
-export default function CartPage() { return <CartContents />; }
+
+/* =========================================================
+   NACHTKRONE — WARENKORB
+   app/(public)/warenkorb/page.tsx
+========================================================= */
+
+/* =========================================================
+   MÉTADONNÉES
+========================================================= */
+
+export const metadata: Metadata = {
+  title: "Warenkorb",
+
+  description:
+    "Überprüfe deine ausgewählten Krampusmasken, Kostüme und Sets im NACHTKRONE Warenkorb.",
+
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+/* =========================================================
+   PAGE PANIER
+========================================================= */
+
+export default function CartPage() {
+  return <CartContents />;
+}
