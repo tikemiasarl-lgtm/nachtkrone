@@ -5,6 +5,7 @@ import HomeHero from "@/components/public/home/HomeHero";
 import HomeProducts, {
   type HomeProduct,
 } from "@/components/public/home/HomeProducts";
+import HomePromotions from "@/components/public/home/HomePromotions";
 import HomeTrustBar from "@/components/public/home/HomeTrustBar";
 
 import { prisma } from "@/lib/prisma";
@@ -51,17 +52,18 @@ const HOME_PRODUCT_LIMIT = 8;
    CHARGEMENT DES PRODUITS
    ========================================================= */
 
-async function getHomeProducts(): Promise<HomeProduct[]> {
+async function getHomeProducts(promotionsOnly = false): Promise<HomeProduct[]> {
   const products = await prisma.product.findMany({
     where: {
       status: "PUBLISHED",
+      ...(promotionsOnly ? { stock: { gt: 0 }, promotionalPrice: { not: null } } : {}),
     },
 
     orderBy: {
       createdAt: "desc",
     },
 
-    take: HOME_PRODUCT_LIMIT,
+    take: promotionsOnly ? 12 : HOME_PRODUCT_LIMIT,
 
     select: {
       id: true,
@@ -112,7 +114,14 @@ async function getHomeProducts(): Promise<HomeProduct[]> {
    ========================================================= */
 
 export default async function HomePage() {
-  const products = await getHomeProducts();
+  const [products, promotionCandidates] = await Promise.all([getHomeProducts(), getHomeProducts(true)]);
+  const promotions = promotionCandidates.filter(product => {
+    const price = Number(product.price);
+    const sale = Number(product.promotionalPrice);
+    return Number.isFinite(price) && Number.isFinite(sale) && sale > 0 && sale < price;
+  });
+  const month = Number(new Intl.DateTimeFormat("en", { timeZone: "Europe/Berlin", month: "numeric" }).format(new Date()));
+  const season = month === 10 ? "halloween" : month === 11 || month === 12 ? "krampus" : "collection";
 
   return (
     <>
@@ -125,6 +134,7 @@ export default async function HomePage() {
 
       <HomeHero />
       <HomeTrustBar />
+      <HomePromotions products={promotions} season={season} />
 
       {/* =====================================================
           PRODUITS
