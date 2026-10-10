@@ -53,10 +53,12 @@ export default function AdminAutoRefresh() {
   const [isPending, startTransition] =
     useTransition();
 
-  const lastRefreshRef = useRef(Date.now());
+  const lastRefreshRef = useRef(0);
 
   const pendingRef = useRef(isPending);
-  pendingRef.current = isPending;
+  useEffect(() => {
+    pendingRef.current = isPending;
+  }, [isPending]);
 
   const enabled = LIVE_PAGES.has(pathname);
 

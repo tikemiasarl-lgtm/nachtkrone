@@ -1,3 +1,4 @@
+import OrderManagement from "@/components/admin/OrderManagement";
 import OrderContactDetails from "@/components/admin/OrderContactDetails";
 import Link from "next/link";
 import {
@@ -462,6 +463,7 @@ export default async function AdminOrdersPage({
         paidAt: true,
 
         createdAt: true,
+        updatedAt: true,
 
         customer: {
           select: {
@@ -1077,6 +1079,7 @@ export default async function AdminOrdersPage({
                               order.createdAt
                             )}
                           </time>
+                          <OrderManagement key={order.updatedAt.toISOString()} id={order.id} orderNumber={order.orderNumber} status={order.status} paymentStatus={order.paymentStatus} paymentMethod={order.paymentMethod} paymentReference={order.paymentReference} updatedAt={order.updatedAt.toISOString()} />
                         </td>
                       </tr>
                     );
@@ -1233,6 +1236,8 @@ export default async function AdminOrdersPage({
                         }
                       </span>
                     </div>
+
+                    <OrderManagement key={order.updatedAt.toISOString()} id={order.id} orderNumber={order.orderNumber} status={order.status} paymentStatus={order.paymentStatus} paymentMethod={order.paymentMethod} paymentReference={order.paymentReference} updatedAt={order.updatedAt.toISOString()} />
 
                     {/* Destination */}
 
