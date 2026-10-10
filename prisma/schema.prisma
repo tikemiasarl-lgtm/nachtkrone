@@ -7,10 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// =========================================================
-// PRODUITS
-// =========================================================
-
 model Product {
   id               String          @id @default(cuid())
   name             String
@@ -18,336 +14,97 @@ model Product {
   shortDescription String
   description      String
   category         ProductCategory
+  price            Decimal         @db.Decimal(10, 2)
+  stock            Int             @default(0)
+  mainImage        String
+  status           ProductStatus   @default(DRAFT)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  promotionalPrice Decimal?        @db.Decimal(10, 2)
   subcategory      String?
-
-  // -------------------------------------------------------
-  // PRIX
-  // -------------------------------------------------------
-
-  // Prix normal du produit.
-  price Decimal @db.Decimal(10, 2)
-
-  // Prix promotionnel facultatif.
-  //
-  // null = aucune promotion.
-  //
-  // La validation applicative doit garantir :
-  // promotionalPrice < price
-  promotionalPrice Decimal? @db.Decimal(10, 2)
-
-  // -------------------------------------------------------
-  // STOCK
-  // -------------------------------------------------------
-
-  stock Int @default(0)
-
-  // -------------------------------------------------------
-  // IMAGE PRINCIPALE
-  // -------------------------------------------------------
-
-  mainImage String
-
-  // -------------------------------------------------------
-  // PUBLICATION
-  // -------------------------------------------------------
-
-  status ProductStatus @default(DRAFT)
-
-  // -------------------------------------------------------
-  // RELATIONS
-  // -------------------------------------------------------
-
-  images ProductImage[]
-
-  orderItems OrderItem[]
-
-  // -------------------------------------------------------
-  // DATES
-  // -------------------------------------------------------
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  orderItems       OrderItem[]
+  images           ProductImage[]
 
   @@index([category])
   @@index([status])
   @@index([createdAt])
 }
 
-// =========================================================
-// IMAGES PRODUITS
-//
-// Product.mainImage = image principale
-//
-// ProductImage = images supplémentaires.
-//
-// Maximum 15 images supplémentaires :
-// cette limite doit être contrôlée par l'application.
-// =========================================================
-
 model ProductImage {
-  id String @id @default(cuid())
-
-  url      String
-  position Int
-
-  // -------------------------------------------------------
-  // PRODUIT
-  // -------------------------------------------------------
-
+  id        String   @id @default(cuid())
+  url       String
+  position  Int
   productId String
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  // -------------------------------------------------------
-  // DATE
-  // -------------------------------------------------------
-
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([productId, position])
   @@index([productId])
 }
 
-// =========================================================
-// CLIENTS
-//
-// Customer représente le client principal.
-//
-// Les coordonnées complètes de chaque commande sont également
-// copiées dans Order afin de conserver l'historique exact,
-// même si les informations du client changent plus tard.
-// =========================================================
-
 model Customer {
-  id String @id @default(cuid())
-
+  id        String   @id @default(cuid())
   firstName String
   lastName  String
-
-  email String
-  phone String
-
-  // -------------------------------------------------------
-  // COMMANDES
-  // -------------------------------------------------------
-
-  orders Order[]
-
-  // -------------------------------------------------------
-  // DATES
-  // -------------------------------------------------------
-
+  email     String
+  phone     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  orders    Order[]
 
   @@index([email])
   @@index([phone])
   @@index([createdAt])
 }
 
-// =========================================================
-// COMMANDES
-//
-// IMPORTANT :
-//
-// NACHTKRONE ne réalise pas le paiement directement
-// sur cette page.
-//
-// Le client :
-// 1. choisit ses produits,
-// 2. renseigne ses coordonnées,
-// 3. renseigne son adresse,
-// 4. envoie sa commande.
-//
-// Le serveur :
-// 1. vérifie les produits,
-// 2. recalcule les prix,
-// 3. crée la commande,
-// 4. envoie l'e-mail administrateur,
-// 5. envoie la confirmation au client,
-// 6. peut joindre le PDF de confirmation.
-//
-// Une commande nouvellement créée reste donc :
-//
-// status        = PENDING
-// paymentStatus = PENDING
-// =========================================================
-
 model Order {
-  id String @id @default(cuid())
-
-  // -------------------------------------------------------
-  // NUMÉRO DE COMMANDE
-  // -------------------------------------------------------
-
-  orderNumber String @unique
-
-  // -------------------------------------------------------
-  // CLIENT
-  // -------------------------------------------------------
-
-  customerId String
-
-  customer Customer @relation(fields: [customerId], references: [id])
-
-  // -------------------------------------------------------
-  // ARTICLES
-  // -------------------------------------------------------
-
-  items OrderItem[]
-
-  // =======================================================
-  // SNAPSHOT DES COORDONNÉES CLIENT
-  // =======================================================
-
-  customerFirstName String
-  customerLastName  String
-  customerEmail     String
-  customerPhone     String
-
-  // =======================================================
-  // ADRESSE DE LIVRAISON
-  // =======================================================
-
-  shippingFirstName String
-  shippingLastName  String
-
-  shippingAddress  String
-  shippingAddress2 String?
-
-  shippingPostalCode String
-  shippingCity       String
-
-  // Région / canton / province si nécessaire.
-  shippingState String?
-
-  // Exemple :
-  // Deutschland
-  // Schweiz
-  // Italien
-  // Liechtenstein
-  shippingCountry String
-
-  // Code ISO utilisé par l'application :
-  // DE
-  // CH
-  // IT
-  // LI
-  shippingCountryCode String
-
-  // =======================================================
-  // ADRESSE DE FACTURATION
-  //
-  // false :
-  // l'adresse de facturation est identique à la livraison.
-  //
-  // true :
-  // les champs billing* sont utilisés.
-  // =======================================================
-
-  hasDifferentBillingAddress Boolean @default(false)
-
-  billingFirstName String?
-  billingLastName  String?
-
-  billingAddress  String?
-  billingAddress2 String?
-
-  billingPostalCode String?
-  billingCity       String?
-  billingState      String?
-
-  billingCountry     String?
-  billingCountryCode String?
-
-  // =======================================================
-  // MONTANTS
-  // =======================================================
-
-  subtotal Decimal @db.Decimal(10, 2)
-
-  // Peut rester à 0 lors de la création si le coût
-  // de livraison n'est pas encore déterminé.
-  shippingAmount Decimal @default(0) @db.Decimal(10, 2)
-
-  total Decimal @db.Decimal(10, 2)
-
-  currency String @default("EUR")
-
-  // =======================================================
-  // STATUT DE LA COMMANDE
-  // =======================================================
-
-  status OrderStatus @default(PENDING)
-
-  // =======================================================
-  // STATUT DE PAIEMENT
-  //
-  // Aucun paiement automatique sur la page de commande.
-  // Une nouvelle commande reste PENDING.
-  // =======================================================
-
-  paymentStatus PaymentStatus @default(PENDING)
-
-  // =======================================================
-  // INFORMATIONS DE PAIEMENT
-  //
-  // Conservées pour permettre une gestion ultérieure
-  // par l'administrateur si nécessaire.
-  // =======================================================
-
-  paymentMethod String?
-
-  paymentReference String?
-
-  paidAt DateTime?
-
-  // =======================================================
-  // E-MAIL DE CONFIRMATION CLIENT
-  // =======================================================
-
-  confirmationEmailSent Boolean @default(false)
-
-  confirmationEmailSentAt DateTime?
-
-  // =======================================================
-  // E-MAIL DE NOTIFICATION ADMINISTRATEUR
-  // =======================================================
-
-  adminNotificationEmailSent Boolean @default(false)
-
+  id                           String        @id @default(cuid())
+  orderNumber                  String        @unique
+  customerId                   String
+  customerFirstName            String
+  customerLastName             String
+  customerEmail                String
+  customerPhone                String
+  shippingFirstName            String
+  shippingLastName             String
+  shippingAddress              String
+  shippingAddress2             String?
+  shippingPostalCode           String
+  shippingCity                 String
+  shippingState                String?
+  shippingCountry              String
+  subtotal                     Decimal       @db.Decimal(10, 2)
+  shippingAmount               Decimal       @default(0) @db.Decimal(10, 2)
+  total                        Decimal       @db.Decimal(10, 2)
+  currency                     String        @default("EUR")
+  status                       OrderStatus   @default(PENDING)
+  paymentStatus                PaymentStatus @default(PENDING)
+  paymentMethod                String?
+  paymentReference             String?
+  paidAt                       DateTime?
+  confirmationEmailSent        Boolean       @default(false)
+  confirmationEmailSentAt      DateTime?
+  customerNote                 String?
+  adminNote                    String?
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  adminNotificationEmailSent   Boolean       @default(false)
   adminNotificationEmailSentAt DateTime?
-
-  // =======================================================
-  // PDF DE CONFIRMATION DE COMMANDE
-  //
-  // Ce document est une confirmation de commande.
-  // Ce n'est PAS une preuve de paiement.
-  // =======================================================
-
-  confirmationDocumentNumber String? @unique
-
-  confirmationDocumentUrl String?
-
-  // =======================================================
-  // NOTES
-  // =======================================================
-
-  customerNote String?
-
-  adminNote String?
-
-  // =======================================================
-  // DATES
-  // =======================================================
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
-
-  // =======================================================
-  // INDEX
-  // =======================================================
+  billingAddress               String?
+  billingAddress2              String?
+  billingCity                  String?
+  billingCountry               String?
+  billingCountryCode           String?
+  billingFirstName             String?
+  billingLastName              String?
+  billingPostalCode            String?
+  billingState                 String?
+  confirmationDocumentNumber   String?       @unique
+  confirmationDocumentUrl      String?
+  hasDifferentBillingAddress   Boolean       @default(false)
+  shippingCountryCode          String
+  customer                     Customer      @relation(fields: [customerId], references: [id])
+  items                        OrderItem[]
 
   @@index([customerId])
   @@index([orderNumber])
@@ -358,89 +115,22 @@ model Order {
   @@index([createdAt])
 }
 
-// =========================================================
-// ARTICLES D'UNE COMMANDE
-//
-// OrderItem constitue un SNAPSHOT.
-//
-// Cela signifie que même si :
-// - le produit change de nom,
-// - son prix change,
-// - son image change,
-// - le produit est supprimé,
-//
-// la commande conserve les informations telles qu'elles
-// étaient lors de sa création.
-// =========================================================
-
 model OrderItem {
-  id String @id @default(cuid())
-
-  // -------------------------------------------------------
-  // COMMANDE
-  // -------------------------------------------------------
-
-  orderId String
-
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  // -------------------------------------------------------
-  // PRODUIT ORIGINAL
-  // -------------------------------------------------------
-
-  productId String?
-
-  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-
-  // =======================================================
-  // SNAPSHOT PRODUIT
-  // =======================================================
-
-  productName String
-
+  id           String   @id @default(cuid())
+  orderId      String
+  productId    String?
+  productName  String
   productImage String
-
-  // -------------------------------------------------------
-  // PRIX UNITAIRE EFFECTIF
-  //
-  // promotionalPrice lorsqu'une promotion valide existe,
-  // sinon price.
-  //
-  // IMPORTANT :
-  // cette valeur doit être calculée côté serveur.
-  // Le navigateur ne décide jamais du prix.
-  // -------------------------------------------------------
-
-  unitPrice Decimal @db.Decimal(10, 2)
-
-  // -------------------------------------------------------
-  // QUANTITÉ
-  // -------------------------------------------------------
-
-  quantity Int
-
-  // -------------------------------------------------------
-  // TOTAL ARTICLE
-  //
-  // unitPrice × quantity
-  // calculé côté serveur.
-  // -------------------------------------------------------
-
-  totalPrice Decimal @db.Decimal(10, 2)
-
-  // -------------------------------------------------------
-  // DATE
-  // -------------------------------------------------------
-
-  createdAt DateTime @default(now())
+  unitPrice    Decimal  @db.Decimal(10, 2)
+  quantity     Int
+  totalPrice   Decimal  @db.Decimal(10, 2)
+  createdAt    DateTime @default(now())
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product      Product? @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
 }
-
-// =========================================================
-// ENUMS
-// =========================================================
 
 enum ProductCategory {
   MASK
@@ -458,10 +148,6 @@ enum ProductStatus {
   ARCHIVED
 }
 
-// =========================================================
-// STATUT COMMANDE
-// =========================================================
-
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -471,15 +157,6 @@ enum OrderStatus {
   CANCELLED
   REFUNDED
 }
-
-// =========================================================
-// STATUT PAIEMENT
-//
-// Le site ne marque jamais automatiquement une nouvelle
-// commande comme PAID.
-//
-// PENDING reste la valeur initiale.
-// =========================================================
 
 enum PaymentStatus {
   PENDING
