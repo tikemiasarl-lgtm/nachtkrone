@@ -1,3 +1,4 @@
+import DeleteCustomerButton from "@/components/admin/DeleteCustomerButton";
 import Link from "next/link";
 import {
   Banknote,
@@ -826,6 +827,7 @@ export default async function AdminCustomersPage({
                                 customer.createdAt
                               )}
                             </time>
+                            <DeleteCustomerButton key={customer.updatedAt.toISOString()} id={customer.id} name={customerName} totalOrders={customer.totalOrders} updatedAt={customer.updatedAt.toISOString()} />
                           </td>
                         </tr>
                       );
@@ -971,6 +973,7 @@ export default async function AdminCustomersPage({
                           </p>
                         ) : null}
                       </div>
+                      <DeleteCustomerButton key={customer.updatedAt.toISOString()} id={customer.id} name={customerName} totalOrders={customer.totalOrders} updatedAt={customer.updatedAt.toISOString()} />
                     </div>
                   </article>
                 );
