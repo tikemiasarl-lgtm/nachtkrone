@@ -210,14 +210,14 @@ export default function ProductInfo({
             items-center
             gap-1.5
             rounded-full
-            bg-slate-100
+            bg-[#f5f0e7]
             px-3
             py-1.5
             text-[11px]
             font-extrabold
             uppercase
             tracking-[0.08em]
-            text-slate-700
+            text-[#805b2b]
             sm:text-xs
           "
         >
@@ -240,14 +240,14 @@ export default function ProductInfo({
               inline-flex
               items-center
               rounded-full
-              bg-red-50
+              bg-[#faf0f1]
               px-3
               py-1.5
               text-[11px]
               font-black
               uppercase
               tracking-[0.06em]
-              text-red-600
+              text-[#96243c]
               sm:text-xs
             "
           >
@@ -263,9 +263,9 @@ export default function ProductInfo({
       <h1
         className="
           break-words
-          text-[26px]
+          text-[28px]
           font-black
-          leading-[1.12]
+          leading-[1.16]
           tracking-[-0.035em]
           text-slate-950
           sm:text-[30px]
@@ -298,11 +298,11 @@ export default function ProductInfo({
               "font-black",
               "tracking-[-0.025em]",
               "tabular-nums",
-              "text-[26px]",
-              "sm:text-[30px]",
+              "text-[32px]",
+              "sm:text-[38px]",
               hasPromotion
-                ? "text-red-600"
-                : "text-[#1769e0]",
+                ? "text-[#96243c] rounded-xl border border-[#ead2d5] bg-[#faf0f1] px-3 py-1"
+                : "text-[#805b2b]",
             ].join(" ")}
           >
             {formatPrice(
@@ -320,7 +320,7 @@ export default function ProductInfo({
                 text-sm
                 font-semibold
                 tabular-nums
-                text-slate-400
+                text-slate-500
                 line-through
                 decoration-slate-400
                 decoration-1
@@ -337,7 +337,7 @@ export default function ProductInfo({
           DISPONIBILITÉ
          ===================================================== */}
 
-      <div className="mt-4">
+      <div className="mt-5">
         {inStock ? (
           <div
             className="
@@ -369,7 +369,7 @@ export default function ProductInfo({
               gap-2
               text-sm
               font-bold
-              text-red-600
+              text-[#96243c]
             "
           >
             <PackageX
@@ -398,7 +398,7 @@ export default function ProductInfo({
           className="
             mt-5
             border-t
-            border-slate-200
+            border-[#e8e3da]
             pt-5
           "
         >

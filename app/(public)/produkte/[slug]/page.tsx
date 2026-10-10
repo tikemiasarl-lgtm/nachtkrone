@@ -475,7 +475,7 @@ export default async function ProductPage({
      ======================================================= */
 
   return (
-    <div className="bg-white">
+    <div className="bg-[#faf9f6]">
       <div
         className="
           mx-auto
@@ -501,7 +501,7 @@ export default async function ProductPage({
            ================================================= */}
 
         <nav
-          aria-label="Breadcrumb"
+          aria-label="Brotkrumennavigation"
           className="
             mb-5
             overflow-hidden
@@ -688,7 +688,8 @@ export default async function ProductPage({
               INFORMATIONS PRODUIT
              =============================================== */}
 
-          <div className="min-w-0">
+          <div className="min-w-0 rounded-[28px] border border-[#e8e3da] bg-white p-5 shadow-[0_16px_50px_-30px_rgba(15,23,42,0.25)] sm:p-8">
+            <p className="mb-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.24em] text-[#805b2b]"><span className="h-px w-8 bg-[#c6a56c]" aria-hidden="true" />NACHTKRONE KOLLEKTION</p>
             <ProductInfo
               name={
                 product.name
@@ -726,7 +727,7 @@ export default async function ProductPage({
                 commande WhatsApp complète.
                ============================================= */}
 
-            <div className="mt-6">
+            <div className="mt-7 rounded-2xl border border-[#e8e3da] bg-[#faf9f6] p-4 sm:p-5">
               <ProductPurchase
                 productId={
                   product.id
@@ -778,13 +779,13 @@ export default async function ProductPage({
               <a
                 href="#versand-rueckgabe"
                 className="
-                  text-[#1769e0]
+                  text-[#805b2b]
                   underline
-                  decoration-[#1769e0]/30
+                  decoration-[#805b2b]/30
                   underline-offset-4
                   transition-colors
 
-                  hover:text-[#0f5fcf]
+                  hover:text-[#543a1a]
                 "
               >
                 Versandinformationen
@@ -800,9 +801,14 @@ export default async function ProductPage({
         <div
           className="
             mt-9
-            border-t
-            border-slate-200
+            rounded-[28px]
+            border
+            border-[#e8e3da]
+            bg-white
+            px-5
+            pb-7
             pt-7
+            sm:px-8
 
             sm:mt-11
             sm:pt-9

@@ -1145,7 +1145,7 @@ export default async function AdminProductsPage({
                             )}
                           </time>
                         </td>
-                        <td className="px-5 py-4"><DeleteProductButton productId={product.id} productName={product.name} /></td>
+                        <td className="px-5 py-4"><div className="flex flex-wrap items-start gap-2"><Link href={"/admin/products/" + encodeURIComponent(product.id) + "/edit"} className="inline-flex min-h-10 items-center rounded-lg border border-blue-200 bg-white px-3 text-xs font-semibold text-[#087cff] hover:bg-blue-50">Modifier</Link><DeleteProductButton productId={product.id} productName={product.name} /></div></td>
                       </tr>
                     )
                   )}
@@ -1268,7 +1268,7 @@ export default async function AdminProductsPage({
                       </span>
                     </div>
                   </div>
-                    <div className="px-4 pb-4"><DeleteProductButton productId={product.id} productName={product.name} /></div>
+                    <div className="px-4 pb-4"><div className="flex flex-wrap items-start gap-2"><Link href={"/admin/products/" + encodeURIComponent(product.id) + "/edit"} className="inline-flex min-h-10 items-center rounded-lg border border-blue-200 bg-white px-3 text-xs font-semibold text-[#087cff] hover:bg-blue-50">Modifier</Link><DeleteProductButton productId={product.id} productName={product.name} /></div></div>
                 </article>
               )
             )}

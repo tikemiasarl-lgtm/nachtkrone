@@ -399,7 +399,7 @@ export default function ProductActions({
           }
           className={[
             "flex",
-            "min-h-[54px]",
+            "min-h-[58px]",
             "w-full",
             "items-center",
             "justify-center",
@@ -424,12 +424,12 @@ export default function ProductActions({
               : canAddToCart &&
                   onAddToCart
                 ? [
-                    "bg-[#1769e0]",
+                    "bg-[#101c2c]",
                     "text-white",
-                    "shadow-[0_8px_24px_rgba(23,105,224,0.24)]",
+                    "shadow-[0_8px_24px_rgba(16,28,44,0.2)]",
                     "hover:-translate-y-0.5",
-                    "hover:bg-[#0f5fcf]",
-                    "hover:shadow-[0_12px_30px_rgba(23,105,224,0.30)]",
+                    "hover:bg-[#26364c]",
+                    "hover:shadow-[0_12px_30px_rgba(16,28,44,0.28)]",
                     "active:translate-y-0",
                     "focus-visible:ring-[#1769e0]/25",
                   ].join(" ")

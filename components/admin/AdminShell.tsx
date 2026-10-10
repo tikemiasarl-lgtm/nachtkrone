@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -10,7 +11,6 @@ import {
 import { usePathname } from "next/navigation";
 
 import AdminAutoRefresh from "@/components/admin/AdminAutoRefresh";
-
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
@@ -23,10 +23,11 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
    - Sidebar desktop
    - Sidebar mobile
    - Header administrateur
-   - Gestion ouverture / fermeture menu mobile
-   - Blocage du scroll quand le menu mobile est ouvert
+   - Gestion ouverture / fermeture du menu mobile
+   - Blocage du scroll lorsque le menu mobile est ouvert
+   - Fermeture du menu lors d'un changement de page
    - Exclusion de l'interface admin sur la page login
-   ========================================================= */
+========================================================= */
 
 type AdminShellProps = {
   children: ReactNode;
@@ -34,7 +35,7 @@ type AdminShellProps = {
 
 /* =========================================================
    COMPOSANT
-   ========================================================= */
+========================================================= */
 
 export default function AdminShell({
   children,
@@ -43,79 +44,91 @@ export default function AdminShell({
 
   /* =======================================================
      MENU MOBILE
-     ======================================================= */
+  ======================================================= */
 
-  const [
-    mobileMenuOpen,
-    setMobileMenuOpen,
-  ] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] =
+    useState(false);
 
   /* =======================================================
      PAGE DE CONNEXION
-     ======================================================= */
+  ======================================================= */
 
   const isLoginPage =
     pathname === "/admin/login" ||
-    pathname.startsWith(
-      "/admin/login/"
-    );
+    pathname.startsWith("/admin/login/");
 
   /* =======================================================
      OUVERTURE DU MENU
-     ======================================================= */
+  ======================================================= */
 
-  const handleMobileMenuOpen =
-    useCallback(() => {
-      setMobileMenuOpen(true);
-    }, []);
+  const handleMobileMenuOpen = useCallback(() => {
+    setMobileMenuOpen(true);
+  }, []);
 
   /* =======================================================
      FERMETURE DU MENU
-     ======================================================= */
+  ======================================================= */
 
-  const handleMobileMenuClose =
-    useCallback(() => {
-      setMobileMenuOpen(false);
-    }, []);
+  const handleMobileMenuClose = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
 
   /* =======================================================
-     BLOQUER LE SCROLL DU BODY
+     FERMETURE AUTOMATIQUE APRÈS NAVIGATION
 
-     Quand le menu mobile est ouvert :
-     - le contenu derrière la sidebar ne doit pas défiler.
+     Le chemin courant est conservé avec le menu ouvert.
+     Si le chemin change, le menu est fermé au rendu suivant.
+     Aucun setState dans useEffect.
+  ======================================================= */
 
-     Quand le menu se ferme :
-     - on restaure exactement la valeur précédente.
-     ======================================================= */
+  const [menuPathname, setMenuPathname] =
+    useState(pathname);
+
+  const isMobileMenuVisible =
+    mobileMenuOpen &&
+    menuPathname === pathname &&
+    !isLoginPage;
+
+  const openMobileMenu = useCallback(() => {
+    setMenuPathname(pathname);
+    handleMobileMenuOpen();
+  }, [pathname, handleMobileMenuOpen]);
+
+  /* =======================================================
+     BLOCAGE DU SCROLL
+
+     Lorsque le menu mobile est ouvert :
+     - le contenu derrière la sidebar ne défile pas.
+
+     Lorsqu'il est fermé :
+     - la valeur précédente est restaurée.
+  ======================================================= */
 
   useEffect(() => {
-    if (!mobileMenuOpen) {
+    if (!isMobileMenuVisible) {
       return;
     }
 
-    const body =
-      document.body;
+    const body = document.body;
 
-    const previousOverflow =
-      body.style.overflow;
+    const previousOverflow = body.style.overflow;
 
-    body.style.overflow =
-      "hidden";
+    body.style.overflow = "hidden";
 
     return () => {
-      body.style.overflow =
-        previousOverflow;
+      body.style.overflow = previousOverflow;
     };
-  }, [mobileMenuOpen]);
+  }, [isMobileMenuVisible]);
 
   /* =======================================================
      PAGE DE CONNEXION
 
-     La page /admin/login doit rester indépendante :
-     - pas de sidebar
-     - pas de header admin
-     - pas de marge desktop
-     ======================================================= */
+     /admin/login reste indépendante :
+     - aucune sidebar
+     - aucun header administrateur
+     - aucune marge desktop
+     - aucun rafraîchissement automatique
+  ======================================================= */
 
   if (isLoginPage) {
     return <>{children}</>;
@@ -123,11 +136,10 @@ export default function AdminShell({
 
   /* =======================================================
      ESPACE ADMINISTRATEUR
-     ======================================================= */
+  ======================================================= */
 
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-[#071b3a]">
-
       {/* ===================================================
           SIDEBAR
 
@@ -135,55 +147,41 @@ export default function AdminShell({
           affichée en permanence.
 
           Mobile :
-          contrôlée par mobileMenuOpen.
+          contrôlée par isMobileMenuVisible.
 
-          AdminSidebar appelle onMobileClose lors de la
-          fermeture du panneau.
-          =================================================== */}
+          AdminSidebar utilise onMobileClose pour fermer
+          le panneau.
+      =================================================== */}
 
       <AdminSidebar
-        mobileOpen={
-          mobileMenuOpen
-        }
-        onMobileClose={
-          handleMobileMenuClose
-        }
+        mobileOpen={isMobileMenuVisible}
+        onMobileClose={handleMobileMenuClose}
       />
 
       {/* ===================================================
           CONTENU PRINCIPAL
 
-          Sur desktop :
-          270px sont réservés à la sidebar.
-          =================================================== */}
+          Desktop :
+          270px réservés à la sidebar.
+      =================================================== */}
 
       <div className="min-h-screen lg:pl-[270px]">
-
-        {/* =================================================
-            HEADER
-            ================================================= */}
+        {/* HEADER */}
 
         <AdminHeader
-          onMenuOpen={
-            handleMobileMenuOpen
-          }
+          onMenuOpen={openMobileMenu}
         />
 
-        {/* =================================================
-            CONTENU DE LA PAGE
-            ================================================= */}
+        {/* CONTENU */}
 
         <main className="min-h-[calc(100vh-78px)]">
-
           <div className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
             <AdminAutoRefresh />
+
             {children}
           </div>
-
         </main>
-
       </div>
-
     </div>
   );
 }

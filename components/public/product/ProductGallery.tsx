@@ -291,9 +291,9 @@ export default function ProductGallery({
             items-center
             justify-center
             overflow-hidden
-            rounded-2xl
+            rounded-[28px]
             border
-            border-slate-200
+            border-[#e8e3da]
             bg-slate-50
             px-6
             text-center
@@ -330,10 +330,11 @@ export default function ProductGallery({
             aspect-square
             w-full
             overflow-hidden
-            rounded-2xl
+            rounded-[28px]
             border
-            border-slate-200
-            bg-white
+            border-[#e8e3da]
+            bg-[#f2efe9]
+            shadow-[0_18px_55px_-35px_rgba(15,23,42,0.3)]
           "
         >
           <button
@@ -368,12 +369,12 @@ export default function ProductGallery({
             sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 620px"
             className="
               object-contain
-              p-2
+              p-4
               transition-transform
               duration-500
               ease-out
-              group-hover:scale-[1.015]
-              sm:p-3
+              motion-safe:group-hover:scale-[1.015]
+              sm:p-6
             "
           />
 
@@ -396,7 +397,7 @@ export default function ProductGallery({
               justify-center
               rounded-full
               border
-              border-slate-200
+              border-[#e8e3da]
               bg-white/95
               text-slate-800
               shadow-sm
@@ -436,7 +437,7 @@ export default function ProductGallery({
                 justify-center
                 rounded-full
                 border
-                border-slate-200
+                border-[#e8e3da]
                 bg-white/95
                 text-slate-800
                 shadow-md
@@ -482,7 +483,7 @@ export default function ProductGallery({
                 justify-center
                 rounded-full
                 border
-                border-slate-200
+                border-[#e8e3da]
                 bg-white/95
                 text-slate-800
                 shadow-md
@@ -592,11 +593,11 @@ export default function ProductGallery({
                       "sm:h-20 sm:w-20",
                       isActive
                         ? [
-                            "border-[#1769e0]",
-                            "shadow-sm",
+                            "border-[#a0783e]",
+                            "shadow-[0_4px_16px_rgba(128,91,43,0.12)]",
                           ].join(" ")
                         : [
-                            "border-slate-200",
+                            "border-[#e8e3da]",
                             "hover:border-slate-400",
                           ].join(" "),
                     ].join(" ")}
