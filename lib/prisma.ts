@@ -21,7 +21,13 @@ function diagnosticValue(value: unknown): string | undefined {
 }
 
 function createPrismaClient() {
-  const adapter = new PrismaPg({ connectionString: databaseUrl });
+  const adapter = new PrismaPg({
+    connectionString: databaseUrl,
+    max: 3,
+    connectionTimeoutMillis: 10_000,
+    idleTimeoutMillis: 10_000,
+    keepAlive: true,
+  });
   return new PrismaClient({ adapter }).$extends({
     name: "safe-database-diagnostics",
     query: {
