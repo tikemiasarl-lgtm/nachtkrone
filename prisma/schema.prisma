@@ -18,6 +18,7 @@ model Product {
   shortDescription String
   description      String
   category         ProductCategory
+  subcategory      String?
 
   // -------------------------------------------------------
   // PRIX
@@ -445,6 +446,10 @@ enum ProductCategory {
   MASK
   COSTUME
   MASK_AND_COSTUME
+  ACCESSORIES
+  DECORATION_GIFTS
+  CARE_STORAGE
+  OFFERS
 }
 
 enum ProductStatus {

@@ -1,3 +1,4 @@
+import { PRODUCT_CATEGORY_LABELS, type ProductCategoryValue } from "@/lib/product-categories";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,10 +44,7 @@ export const revalidate = 0;
    TYPES
    ========================================================= */
 
-type ProductCategory =
-  | "MASK"
-  | "COSTUME"
-  | "MASK_AND_COSTUME";
+type ProductCategory = ProductCategoryValue;
 
 type ProductStatus =
   | "DRAFT"
@@ -75,6 +73,7 @@ type SearchParams = {
 const PRODUCTS_PER_PAGE = 20;
 
 const categoryLabels: Record<ProductCategory, string> = {
+  ...PRODUCT_CATEGORY_LABELS,
   MASK: "Masque",
   COSTUME: "Costume",
   MASK_AND_COSTUME: "Masque et costume",

@@ -1,5 +1,7 @@
 "use client";
 
+import type { ProductCategoryValue } from "@/lib/product-categories";
+
 import { useEffect } from "react";
 import {
   Check,
@@ -13,10 +15,7 @@ import {
    TYPES
 ========================================================= */
 
-export type ProductCategoryFilter =
-  | "MASK"
-  | "COSTUME"
-  | "MASK_AND_COSTUME";
+export type ProductCategoryFilter = ProductCategoryValue;
 
 export type ProductFiltersValue = {
   categories: ProductCategoryFilter[];

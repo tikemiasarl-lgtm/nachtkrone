@@ -1,3 +1,4 @@
+import { PRODUCT_CATEGORY_LABELS, type ProductCategoryValue } from "@/lib/product-categories";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -6,10 +7,7 @@ import { ArrowRight } from "lucide-react";
    TYPES
 ========================================================= */
 
-export type ProductCardCategory =
-  | "MASK"
-  | "COSTUME"
-  | "MASK_AND_COSTUME";
+export type ProductCardCategory = ProductCategoryValue;
 
 export type ProductCardData = {
   id: string;
@@ -415,7 +413,7 @@ function getCategoryLabel(
       return "Maske & Kostüm";
 
     default:
-      return "Produkt";
+      return PRODUCT_CATEGORY_LABELS[category] ?? "Produkt";
   }
 }
 

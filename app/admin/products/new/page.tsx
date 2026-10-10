@@ -1,5 +1,7 @@
 "use client";
 
+import { PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS, PRODUCT_SUBCATEGORIES, type ProductCategoryValue } from "@/lib/product-categories";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -44,10 +46,7 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/avif",
 ];
 
-type ProductCategory =
-  | "MASK"
-  | "COSTUME"
-  | "MASK_AND_COSTUME";
+type ProductCategory = ProductCategoryValue;
 
 type ProductStatus =
   | "DRAFT"
@@ -144,6 +143,8 @@ export default function NewProductPage() {
 
   const [category, setCategory] =
     useState<ProductCategory>("MASK");
+
+  const [subcategory, setSubcategory] = useState("");
 
   const [price, setPrice] = useState("");
 
@@ -783,6 +784,7 @@ export default function NewProductPage() {
               description.trim(),
 
             category,
+            subcategory: subcategory || null,
 
             price:
               normalizePriceValue(
@@ -1431,7 +1433,7 @@ export default function NewProductPage() {
                 Vente
               </h3>
 
-              {/* Catégorie */}
+              {/* Kategorie */}
 
               <div className="mt-5">
                 <label
@@ -1446,27 +1448,23 @@ export default function NewProductPage() {
                     id="category"
                     value={category}
                     disabled={isSubmitting}
-                    onChange={(event) =>
-                      setCategory(
-                        event.target
-                          .value as ProductCategory
-                      )
-                    }
+                    onChange={(event) => { setCategory(event.target.value as ProductCategory); setSubcategory(""); }}
                     className="h-13 w-full appearance-none rounded-xl border border-slate-200 bg-[#f8fafc] px-4 pr-11 text-sm font-bold text-[#071b3a] outline-none transition focus:border-[#087cff] focus:bg-white focus:ring-4 focus:ring-[#087cff]/10"
                   >
-                    <option value="MASK">
-                      Masque
-                    </option>
-
-                    <option value="COSTUME">
-                      Costume
-                    </option>
-
-                    <option value="MASK_AND_COSTUME">
-                      Masque et costume
-                    </option>
+                    {PRODUCT_CATEGORIES.filter(value => value !== "MASK_AND_COSTUME").map(value => <option key={value} value={value}>{PRODUCT_CATEGORY_LABELS[value]}</option>)}
                   </select>
 
+                  <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <label htmlFor="subcategory" className="mb-2 block text-sm font-extrabold text-[#071b3a]">Unterkategorie <span className="text-xs font-normal text-slate-400">(optional)</span></label>
+                <div className="relative">
+                  <select id="subcategory" value={subcategory} disabled={isSubmitting} onChange={event => setSubcategory(event.target.value)} className="h-13 w-full appearance-none rounded-xl border border-slate-200 bg-[#f8fafc] px-4 pr-11 text-sm font-bold text-[#071b3a] outline-none transition focus:border-[#087cff] focus:bg-white focus:ring-4 focus:ring-[#087cff]/10">
+                    <option value="">Unterkategorie auswählen</option>
+                    {PRODUCT_SUBCATEGORIES[category].map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                  </select>
                   <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 </div>
               </div>

@@ -1,3 +1,4 @@
+import { PRODUCT_CATEGORY_LABELS, type ProductCategoryValue } from "./product-categories";
 /* =========================================================
    NACHTKRONE — NAVIGATION PUBLIQUE
    lib/public-navigation.ts
@@ -35,10 +36,7 @@ export type MobileNavigationItem = PublicNavigationItem & {
   id: MobileNavigationItemId;
 };
 
-export type PublicProductCategory =
-  | "MASK"
-  | "COSTUME"
-  | "MASK_AND_COSTUME";
+export type PublicProductCategory = ProductCategoryValue;
 
 /* =========================================================
    IDENTITÉ DE LA MARQUE
@@ -190,17 +188,7 @@ export const MOBILE_NAVIGATION: readonly MobileNavigationItem[] =
  * MASK_AND_COSTUME
  */
 
-export const PUBLIC_CATEGORY_LABELS: Record<
-  PublicProductCategory,
-  string
-> = {
-  MASK: "Masken",
-
-  COSTUME: "Kostüme",
-
-  MASK_AND_COSTUME:
-    "Masken & Kostüme",
-};
+export const PUBLIC_CATEGORY_LABELS = PRODUCT_CATEGORY_LABELS;
 
 /* =========================================================
    CATÉGORIES DE L'ACCUEIL

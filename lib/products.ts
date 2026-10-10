@@ -1,3 +1,5 @@
+import { PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS, PRODUCT_SUBCATEGORIES, type ProductCategoryValue } from "./product-categories";
+export { PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS, type ProductCategoryValue } from "./product-categories";
 /* =========================================================
    NACHTKRONE — PRODUITS
    lib/products.ts
@@ -18,14 +20,7 @@
    CONSTANTES
    ========================================================= */
 
-export const PRODUCT_CATEGORIES = [
-  "MASK",
-  "COSTUME",
-  "MASK_AND_COSTUME",
-] as const;
 
-export type ProductCategoryValue =
-  (typeof PRODUCT_CATEGORIES)[number];
 
 export const PRODUCT_STATUSES = [
   "DRAFT",
@@ -98,14 +93,7 @@ export const PRODUCT_LIMITS = {
    LABELS POUR L'INTERFACE
    ========================================================= */
 
-export const PRODUCT_CATEGORY_LABELS: Record<
-  ProductCategoryValue,
-  string
-> = {
-  MASK: "Masque",
-  COSTUME: "Costume",
-  MASK_AND_COSTUME: "Masque et costume",
-};
+
 
 export const PRODUCT_STATUS_LABELS: Record<
   ProductStatusValue,
@@ -126,6 +114,7 @@ export type ProductInput = {
   shortDescription?: unknown;
   description?: unknown;
   category?: unknown;
+  subcategory?: unknown;
   price?: unknown;
   promotionalPrice?: unknown;
   stock?: unknown;
@@ -140,6 +129,7 @@ export type NormalizedProductInput = {
   shortDescription: string;
   description: string;
   category: ProductCategoryValue;
+  subcategory: string | null;
   price: string;
   promotionalPrice: string | null;
   stock: number;
@@ -154,6 +144,7 @@ export type ProductValidationField =
   | "shortDescription"
   | "description"
   | "category"
+  | "subcategory"
   | "price"
   | "promotionalPrice"
   | "stock"
@@ -263,7 +254,7 @@ export function normalizeProductStatus(
 export function createProductSlug(value: string): string {
   return value
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
     .replace(/ß/g, "ss")
     .replace(/[^a-z0-9]+/g, "-")
@@ -668,12 +659,16 @@ export function validateProductInput(
      ======================================================= */
 
   const category = normalizeProductCategory(input.category);
+  const subcategory = typeof input.subcategory === "string" ? input.subcategory.trim() || null : null;
+  if ((input.subcategory != null && typeof input.subcategory !== "string") || (subcategory && (!category || !PRODUCT_SUBCATEGORIES[category].some(option => option.value === subcategory)))) {
+    errors.push({ field: "subcategory", message: "Bitte eine passende Unterkategorie auswählen." });
+  }
 
   if (!category) {
     errors.push({
       field: "category",
       message:
-        "Sélectionne une catégorie valide : Masque, Costume ou Masque et costume.",
+        "Bitte eine gültige Kategorie auswählen.",
     });
   }
 
@@ -901,6 +896,7 @@ export function validateProductInput(
       shortDescription,
       description,
       category,
+      subcategory,
       price,
       promotionalPrice,
       stock,

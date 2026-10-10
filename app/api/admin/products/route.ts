@@ -568,6 +568,7 @@ export async function POST(
 
                 category:
                   productData.category,
+                subcategory: productData.subcategory,
 
                 /*
                  * Prisma Decimal accepte
