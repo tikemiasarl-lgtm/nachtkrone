@@ -1,10 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  PackageOpen,
-  ShoppingBag,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, PackageOpen } from "lucide-react";
 
 import {
   PUBLIC_CATEGORY_LABELS,
@@ -114,389 +110,41 @@ function getProductHref(slug: string): string {
    CARTE PRODUIT
    ========================================================= */
 
-function ProductCard({
-  product,
-}: {
-  product: HomeProduct;
-}) {
-  const promotionalPrice =
-    getValidPromotionalPrice(
-      product.price,
-      product.promotionalPrice
-    );
-
-  const hasPromotion =
-    promotionalPrice !== null;
-
+function ProductCard({ product }: { product: HomeProduct }) {
+  const promotionalPrice = getValidPromotionalPrice(product.price, product.promotionalPrice);
   const inStock = product.stock > 0;
+  const discount = promotionalPrice !== null
+    ? Math.floor(((Number(product.price) - promotionalPrice) * 100) / Number(product.price))
+    : 0;
 
   return (
-    <article
-      className="
-        group
-        flex
-        min-w-0
-        flex-col
-        overflow-hidden
-        rounded-2xl
-        border
-        border-slate-200
-        bg-white
-        shadow-[0_8px_30px_rgba(15,23,42,0.06)]
-        transition-all
-        duration-300
-        hover:-translate-y-1
-        hover:border-slate-300
-        hover:shadow-[0_18px_45px_rgba(15,23,42,0.11)]
-      "
-    >
-      {/* ===================================================
-          IMAGE
-         =================================================== */}
-
-      <Link
-        href={getProductHref(product.slug)}
-        aria-label={product.name}
-        className="
-          relative
-          block
-          aspect-[4/5]
-          w-full
-          overflow-hidden
-          bg-slate-100
-          focus:outline-none
-          focus-visible:ring-4
-          focus-visible:ring-inset
-          focus-visible:ring-[#1769e0]/30
-        "
-      >
-        <Image
-          src={product.mainImage}
-          alt={product.name}
-          fill
-          sizes="
-            (max-width: 639px) 50vw,
-            (max-width: 1023px) 33vw,
-            (max-width: 1279px) 25vw,
-            320px
-          "
-          className="
-            object-cover
-            object-center
-            transition-transform
-            duration-500
-            ease-out
-            group-hover:scale-[1.035]
-          "
-        />
-
-        {/* CATÉGORIE */}
-
-        <div
-          className="
-            absolute
-            left-2.5
-            top-2.5
-            max-w-[calc(100%-20px)]
-            sm:left-3
-            sm:top-3
-          "
-        >
-          <span
-            className="
-              inline-flex
-              max-w-full
-              items-center
-              rounded-full
-              border
-              border-white/30
-              bg-black/60
-              px-2.5
-              py-1.5
-              text-[9px]
-              font-bold
-              uppercase
-              leading-none
-              tracking-[0.08em]
-              text-white
-              shadow-sm
-              backdrop-blur-md
-              sm:px-3
-              sm:text-[10px]
-            "
-          >
-            <span className="truncate">
-              {PUBLIC_CATEGORY_LABELS[
-                product.category
-              ]}
-            </span>
-          </span>
+    <article className="group flex min-w-0 flex-col">
+      <Link href={getProductHref(product.slug)} aria-label={product.name}
+        className="relative block aspect-[4/5] overflow-hidden rounded-xl border border-[#e9e4db] bg-[#f4f1eb] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8b6533]">
+        <Image src={product.mainImage} alt={product.name} fill
+          sizes="(max-width: 479px) 100vw, (max-width: 1023px) 50vw, (max-width: 1499px) 25vw, 340px"
+          className="object-contain p-4 sm:p-5 motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]" />
+        <div className="absolute inset-x-3 top-3 flex flex-wrap items-start justify-between gap-2 sm:inset-x-4 sm:top-4">
+          {promotionalPrice !== null ? <span className="rounded-full border border-[#d9cbb6] bg-[#e8d5b2] px-3 py-1.5 text-[10px] font-semibold tracking-wide text-[#07111f]">{discount > 0 ? "−" + discount + " %" : "Angebot"}</span> : <span />}
+          {!inStock && <span className="rounded-full bg-[#07111f] px-3 py-1.5 text-[10px] font-medium text-white">Ausverkauft</span>}
         </div>
-
-        {/* PROMOTION */}
-
-        {hasPromotion ? (
-          <div
-            className="
-              absolute
-              right-2.5
-              top-2.5
-              sm:right-3
-              sm:top-3
-            "
-          >
-            <span
-              className="
-                inline-flex
-                items-center
-                rounded-full
-                bg-[#b91c1c]
-                px-2.5
-                py-1.5
-                text-[9px]
-                font-black
-                uppercase
-                leading-none
-                tracking-[0.08em]
-                text-white
-                shadow-md
-                sm:px-3
-                sm:text-[10px]
-              "
-            >
-              Angebot
-            </span>
-          </div>
-        ) : null}
-
-        {/* RUPTURE DE STOCK */}
-
-        {!inStock ? (
-          <div
-            className="
-              absolute
-              inset-0
-              flex
-              items-center
-              justify-center
-              bg-black/45
-              p-3
-              backdrop-blur-[1px]
-            "
-          >
-            <span
-              className="
-                rounded-full
-                border
-                border-white/25
-                bg-black/70
-                px-3
-                py-2
-                text-[10px]
-                font-bold
-                uppercase
-                tracking-[0.08em]
-                text-white
-                shadow-lg
-                sm:text-xs
-              "
-            >
-              Ausverkauft
-            </span>
-          </div>
-        ) : null}
+        <div className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/90 text-[#07111f] shadow-sm backdrop-blur-sm transition-colors group-hover:border-[#07111f] group-hover:bg-[#07111f] group-hover:text-[#e8d5b2] sm:bottom-4 sm:right-4">
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </div>
       </Link>
-
-      {/* ===================================================
-          INFORMATIONS
-         =================================================== */}
-
-      <div
-        className="
-          flex
-          flex-1
-          flex-col
-          p-3
-          sm:p-4
-          lg:p-5
-        "
-      >
-        {/* NOM */}
-
-        <Link
-          href={getProductHref(product.slug)}
-          className="
-            line-clamp-2
-            min-h-[40px]
-            text-[14px]
-            font-bold
-            leading-5
-            text-slate-950
-            transition-colors
-            hover:text-[#1769e0]
-            focus:outline-none
-            focus-visible:text-[#1769e0]
-            sm:min-h-[44px]
-            sm:text-[15px]
-            sm:leading-[22px]
-            lg:text-base
-          "
-        >
-          {product.name}
-        </Link>
-
-        {/* PRIX */}
-
-        <div className="mt-3">
-          {hasPromotion ? (
-            <div
-              className="
-                flex
-                flex-wrap
-                items-baseline
-                gap-x-2
-                gap-y-1
-              "
-            >
-              <span
-                className="
-                  text-[15px]
-                  font-black
-                  text-[#b91c1c]
-                  sm:text-base
-                  lg:text-lg
-                "
-              >
-                {formatPrice(
-                  promotionalPrice
-                )}
-              </span>
-
-              <span
-                className="
-                  text-[11px]
-                  font-semibold
-                  text-slate-400
-                  line-through
-                  sm:text-xs
-                "
-              >
-                {formatPrice(product.price)}
-              </span>
-            </div>
-          ) : (
-            <span
-              className="
-                text-[15px]
-                font-black
-                text-slate-950
-                sm:text-base
-                lg:text-lg
-              "
-            >
-              {formatPrice(product.price)}
-            </span>
-          )}
+      <div className="flex flex-1 flex-col px-1 pb-1 pt-5 sm:pt-6">
+        <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#8b6533] sm:text-[10px]">{PUBLIC_CATEGORY_LABELS[product.category]}</p>
+        <h3 className="mt-2 min-h-12 text-[15px] font-medium leading-6 tracking-[-0.015em] text-[#07111f] sm:text-base">
+          <Link href={getProductHref(product.slug)} className="line-clamp-2 hover:text-[#8b6533] focus-visible:outline-2 focus-visible:outline-offset-2">{product.name}</Link>
+        </h3>
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className={"text-xl font-semibold tabular-nums tracking-[-0.035em] sm:text-2xl " + (promotionalPrice !== null ? "rounded-md border border-[#ead2d5] bg-[#faf0f1] px-2.5 py-1 text-[#96243c]" : "text-[#805b2b]")}>{formatPrice(promotionalPrice ?? product.price)}</span>
+          {promotionalPrice !== null && <span className="text-xs tabular-nums text-[#78818b] decoration-[#a8adb4]"><span className="sr-only">Regulärer Preis: </span><s>{formatPrice(product.price)}</s></span>}
         </div>
-
-        {/* STOCK */}
-
-        <div className="mt-2">
-          {inStock ? (
-            <span
-              className="
-                inline-flex
-                items-center
-                gap-1.5
-                text-[10px]
-                font-bold
-                text-emerald-700
-                sm:text-[11px]
-              "
-            >
-              <span
-                aria-hidden="true"
-                className="
-                  h-1.5
-                  w-1.5
-                  rounded-full
-                  bg-emerald-500
-                "
-              />
-
-              Auf Lager
-            </span>
-          ) : (
-            <span
-              className="
-                text-[10px]
-                font-bold
-                text-slate-500
-                sm:text-[11px]
-              "
-            >
-              Derzeit nicht verfügbar
-            </span>
-          )}
-        </div>
-
-        {/* CTA */}
-
-        <div className="mt-auto pt-4">
-          <Link
-            href={getProductHref(product.slug)}
-            className="
-              group/button
-              flex
-              min-h-10
-              w-full
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              bg-[#07111f]
-              px-3
-              py-2.5
-              text-[11px]
-              font-bold
-              text-white
-              transition-all
-              duration-200
-              hover:bg-[#1769e0]
-              focus:outline-none
-              focus-visible:ring-4
-              focus-visible:ring-[#1769e0]/20
-              sm:min-h-11
-              sm:text-xs
-              lg:text-sm
-            "
-          >
-            <ShoppingBag
-              aria-hidden="true"
-              className="
-                h-4
-                w-4
-                shrink-0
-              "
-              strokeWidth={2}
-            />
-
-            <span>Produkt ansehen</span>
-
-            <ArrowRight
-              aria-hidden="true"
-              className="
-                hidden
-                h-4
-                w-4
-                shrink-0
-                transition-transform
-                duration-200
-                group-hover/button:translate-x-0.5
-                sm:block
-              "
-              strokeWidth={2}
-            />
+        <p className={"mt-2 flex items-center gap-2 text-[11px] " + (inStock ? "text-emerald-700" : "text-slate-500")}><span aria-hidden="true" className={"h-1 w-1 rounded-full " + (inStock ? "bg-emerald-600" : "bg-slate-400")} />{inStock ? "Auf Lager" : "Derzeit nicht verfügbar"}</p>
+        <div className="mt-auto pt-5">
+          <Link href={getProductHref(product.slug)} className="flex min-h-11 items-center justify-between gap-3 border-t border-[#e9e4db] text-xs font-medium text-[#07111f] transition-colors hover:text-[#8b6533] focus-visible:outline-2 focus-visible:outline-offset-2">
+            Produkt entdecken <ArrowRight className="h-4 w-4 motion-safe:transition-transform motion-safe:group-hover:translate-x-1" aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -504,286 +152,32 @@ function ProductCard({
   );
 }
 
-/* =========================================================
-   ÉTAT VIDE
-   ========================================================= */
-
 function EmptyProducts() {
   return (
-    <div
-      className="
-        flex
-        min-h-[300px]
-        w-full
-        flex-col
-        items-center
-        justify-center
-        rounded-2xl
-        border
-        border-dashed
-        border-slate-300
-        bg-slate-50
-        px-5
-        py-12
-        text-center
-      "
-    >
-      <div
-        className="
-          flex
-          h-14
-          w-14
-          items-center
-          justify-center
-          rounded-2xl
-          bg-white
-          text-slate-500
-          shadow-sm
-          ring-1
-          ring-slate-200
-        "
-      >
-        <PackageOpen
-          aria-hidden="true"
-          className="h-7 w-7"
-          strokeWidth={1.8}
-        />
-      </div>
-
-      <h3
-        className="
-          mt-5
-          text-lg
-          font-black
-          text-slate-950
-        "
-      >
-        Bald verfügbar
-      </h3>
-
-      <p
-        className="
-          mt-2
-          max-w-md
-          text-sm
-          leading-6
-          text-slate-500
-        "
-      >
-        Neue Krampus-Masken und Kostüme werden
-        vorbereitet.
-      </p>
+    <div className="rounded-2xl border border-[#e9e4db] bg-[#f7f5f0] px-6 py-16 text-center">
+      <PackageOpen className="mx-auto h-9 w-9 text-[#8b6533]" strokeWidth={1.25} aria-hidden="true" />
+      <h3 className="mt-5 text-2xl font-medium tracking-tight text-[#07111f]">Bald verfügbar</h3>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-slate-500">Neue Krampus-Masken und Kostüme werden vorbereitet.</p>
     </div>
   );
 }
 
-/* =========================================================
-   SECTION PRINCIPALE
-   ========================================================= */
-
-export default function HomeProducts({
-  products,
-}: HomeProductsProps) {
+export default function HomeProducts({ products }: HomeProductsProps) {
   return (
-    <section
-      id="produkte"
-      aria-labelledby="home-products-title"
-      className="scroll-mt-24 bg-white py-16 sm:py-20 lg:py-24"
-    >
-      <div
-        className="
-          mx-auto
-          w-full
-          max-w-[1500px]
-          px-4
-          sm:px-5
-          lg:px-6
-          xl:px-8
-          2xl:px-10
-        "
-      >
-        {/* =================================================
-            EN-TÊTE
-           ================================================= */}
-
-        <div
-          className="
-            flex
-            flex-col
-            gap-5
-            sm:flex-row
-            sm:items-end
-            sm:justify-between
-          "
-        >
+    <section id="produkte" aria-labelledby="home-products-title" className="scroll-mt-24 bg-white py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto w-full max-w-[1500px] px-5 sm:px-8 lg:px-12">
+        <div className="flex flex-col gap-6 border-b border-[#e9e4db] pb-8 sm:flex-row sm:items-end sm:justify-between lg:pb-10">
           <div className="max-w-2xl">
-            <p
-              className="
-                text-[11px]
-                font-black
-                uppercase
-                tracking-[0.18em]
-                text-[#1769e0]
-                sm:text-xs
-              "
-            >
-              NACHTKRONE Kollektion
-            </p>
-
-            <h2
-              id="home-products-title"
-              className="
-                mt-2
-                text-[28px]
-                font-black
-                leading-tight
-                tracking-[-0.025em]
-                text-slate-950
-                sm:text-[34px]
-                lg:text-[40px]
-              "
-            >
-              Entdecke unsere Produkte
-            </h2>
-
-            <p
-              className="
-                mt-3
-                max-w-xl
-                text-sm
-                leading-6
-                text-slate-600
-                sm:text-[15px]
-                sm:leading-7
-              "
-            >
-              Ausgewählte Masken, Kostüme und Sets
-              für deine Krampus-Saison.
-            </p>
+            <p className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8b6533]"><span aria-hidden="true" className="h-px w-8 bg-[#c4a477]" /> NACHTKRONE Kollektion</p>
+            <h2 id="home-products-title" className="mt-4 text-[clamp(2rem,4vw,3.4rem)] font-medium leading-[1.12] tracking-[-0.045em] text-[#07111f]">Dein Look.<br /><span className="font-serif font-normal italic text-[#8b6533]">Dein unvergesslicher Auftritt.</span></h2>
+            <p className="mt-5 max-w-lg text-sm leading-7 text-slate-500">Entdecke ausgewählte Masken, Kostüme und Sets für deine Krampus-Saison.</p>
           </div>
-
-          {/* LIEN TOUS LES PRODUITS — DESKTOP */}
-
-          <Link
-            href={PUBLIC_ROUTES.products}
-            className="
-              group
-              hidden
-              shrink-0
-              items-center
-              gap-2
-              rounded-xl
-              border
-              border-slate-200
-              bg-white
-              px-4
-              py-3
-              text-sm
-              font-bold
-              text-slate-800
-              shadow-sm
-              transition-all
-              hover:border-slate-300
-              hover:bg-slate-50
-              focus:outline-none
-              focus-visible:ring-4
-              focus-visible:ring-[#1769e0]/15
-              sm:inline-flex
-            "
-          >
-            <span>Alle Produkte</span>
-
-            <ArrowRight
-              aria-hidden="true"
-              className="
-                h-4
-                w-4
-                transition-transform
-                group-hover:translate-x-0.5
-              "
-              strokeWidth={2}
-            />
-          </Link>
+          <Link href={PUBLIC_ROUTES.products} className="group inline-flex min-h-12 shrink-0 items-center justify-between gap-8 self-start rounded-md border border-[#d9cbb6] px-5 text-xs font-semibold text-[#07111f] transition-colors hover:border-[#07111f] hover:bg-[#07111f] hover:text-[#e8d5b2] focus-visible:outline-2 focus-visible:outline-offset-4 sm:self-auto">Alle Produkte ansehen <ArrowUpRight className="h-4 w-4" aria-hidden="true" /></Link>
         </div>
-
-        {/* =================================================
-            PRODUITS
-           ================================================= */}
-
         <div className="mt-8 lg:mt-10">
-          {products.length > 0 ? (
-            <div
-              className="
-                grid
-                grid-cols-2
-                gap-3
-                sm:grid-cols-3
-                sm:gap-4
-                lg:grid-cols-4
-                lg:gap-5
-                xl:gap-6
-              "
-            >
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyProducts />
-          )}
+          {products.length > 0 ? <div className="grid grid-cols-1 gap-x-5 gap-y-9 min-[480px]:grid-cols-2 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-7">{products.map(product => <ProductCard key={product.id} product={product} />)}</div> : <EmptyProducts />}
         </div>
-
-        {/* =================================================
-            TOUS LES PRODUITS — MOBILE
-           ================================================= */}
-
-        {products.length > 0 ? (
-          <div className="mt-7 sm:hidden">
-            <Link
-              href={PUBLIC_ROUTES.products}
-              className="
-                group
-                flex
-                min-h-12
-                w-full
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-slate-200
-                bg-white
-                px-4
-                py-3
-                text-sm
-                font-bold
-                text-slate-900
-                shadow-sm
-                transition
-                hover:bg-slate-50
-                focus:outline-none
-                focus-visible:ring-4
-                focus-visible:ring-[#1769e0]/15
-              "
-            >
-              <span>Alle Produkte ansehen</span>
-
-              <ArrowRight
-                aria-hidden="true"
-                className="
-                  h-4
-                  w-4
-                  transition-transform
-                  group-hover:translate-x-0.5
-                "
-                strokeWidth={2}
-              />
-            </Link>
-          </div>
-        ) : null}
+        {products.length > 0 && <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#e9e4db] pt-6 sm:flex-row"><p className="text-xs text-slate-500">Noch mehr aus der Welt von NACHTKRONE.</p><Link href={PUBLIC_ROUTES.products} className="inline-flex min-h-11 items-center gap-3 text-xs font-semibold text-[#8b6533] hover:text-[#07111f] focus-visible:outline-2 focus-visible:outline-offset-4">Die gesamte Kollektion entdecken <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div>}
       </div>
     </section>
   );
