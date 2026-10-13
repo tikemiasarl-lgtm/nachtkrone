@@ -315,8 +315,12 @@ function hasInvalidOrigin(
 
   try {
     return (
-      new URL(origin).origin !==
-      request.nextUrl.origin
+      new URL(origin).origin !== request.nextUrl.origin &&
+      !new Set([
+        "https://nachtkrone.shop",
+        "https://www.nachtkrone.shop",
+        "https://mediumaquamarine-ibis-883547.hostingersite.com",
+      ]).has(new URL(origin).origin)
     );
   } catch {
     return true;

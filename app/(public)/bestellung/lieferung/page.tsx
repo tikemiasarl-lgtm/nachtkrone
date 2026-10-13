@@ -582,7 +582,7 @@ export default async function CheckoutDeliveryPage({
      ======================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-50/60">
+    <main translate="no" className="notranslate min-h-screen bg-slate-50/60">
       <DeliveryCheckout
         summary={summary}
         orderItems={orderItems}

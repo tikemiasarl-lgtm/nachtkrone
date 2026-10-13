@@ -1937,31 +1937,10 @@ export default function DeliveryCheckout({
                       disabled:shadow-none
                     "
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2
-                          aria-hidden="true"
-                          className="
-                            h-[18px]
-                            w-[18px]
-                            animate-spin
-                          "
-                          strokeWidth={2.2}
-                        />
-
-                        Wird gesendet ...
-                      </>
-                    ) : (
-                      <>
-                        Bestellung absenden
-
-                        <Send
-                          aria-hidden="true"
-                          className="h-[17px] w-[17px]"
-                          strokeWidth={2.2}
-                        />
-                      </>
-                    )}
+                    <span aria-hidden="true" className="inline-flex h-[18px] w-[18px] items-center justify-center">
+                      {isSubmitting ? <Loader2 className="h-[18px] w-[18px] animate-spin" strokeWidth={2.2} /> : <Send className="h-[17px] w-[17px]" strokeWidth={2.2} />}
+                    </span>
+                    <span>{isSubmitting ? "Wird gesendet ..." : "Bestellung absenden"}</span>
                   </button>
                 </div>
               </div>
