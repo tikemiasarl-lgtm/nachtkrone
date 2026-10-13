@@ -78,10 +78,10 @@ export const PUBLIC_CONTACT = {
    */
   phoneHref: "tel:+4915905493267",
 
-  email: "contact@nachtkrone-shop.com",
+  email: "contact@nachtkrone.shop",
 
   emailHref:
-    "mailto:contact@nachtkrone-shop.com",
+    "mailto:contact@nachtkrone.shop",
 
   whatsappDisplay: "+49 1590 5493267",
 

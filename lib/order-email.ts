@@ -2023,7 +2023,7 @@ function toResendPayload(
 
    RESEND_API_KEY="re_xxxxxxxxx"
    RESEND_FROM_EMAIL="NACHTKRONE <commande@nachtkrone-shop.com>"
-   ORDER_ADMIN_EMAIL="contact@nachtkrone-shop.com"
+   ORDER_ADMIN_EMAIL="contact@nachtkrone.shop"
 
    Ne jamais mettre NEXT_PUBLIC_ devant RESEND_API_KEY.
    ========================================================= */

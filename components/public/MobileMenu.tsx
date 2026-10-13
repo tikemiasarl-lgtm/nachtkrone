@@ -91,7 +91,7 @@ const NACHTKRONE_WHATSAPP_URL =
   "https://wa.me/4915905493267";
 
 const NACHTKRONE_EMAIL =
-  "contact@nachtkrone-shop.com";
+  "contact@nachtkrone.shop";
 
 /* =========================================================
    MENU ITEM

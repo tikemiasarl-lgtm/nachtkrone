@@ -46,10 +46,10 @@ export const CHECKOUT_CONTACT = {
     "https://wa.me/4915905493267",
 
   email:
-    "contact@nachtkrone-shop.com",
+    "contact@nachtkrone.shop",
 
   emailHref:
-    "mailto:contact@nachtkrone-shop.com",
+    "mailto:contact@nachtkrone.shop",
 } as const;
 
 /* =========================================================
