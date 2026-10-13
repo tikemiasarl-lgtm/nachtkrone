@@ -175,7 +175,7 @@ export default function HomeProducts({ products }: HomeProductsProps) {
           <Link href={PUBLIC_ROUTES.products} className="group inline-flex min-h-12 shrink-0 items-center justify-between gap-8 self-start rounded-md border border-[#d9cbb6] px-5 text-xs font-semibold text-[#07111f] transition-colors hover:border-[#07111f] hover:bg-[#07111f] hover:text-[#e8d5b2] focus-visible:outline-2 focus-visible:outline-offset-4 sm:self-auto">Alle Produkte ansehen <ArrowUpRight className="h-4 w-4" aria-hidden="true" /></Link>
         </div>
         <div className="mt-8 lg:mt-10">
-          {products.length > 0 ? <div className="grid grid-cols-1 gap-x-5 gap-y-9 min-[480px]:grid-cols-2 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-7">{products.map(product => <ProductCard key={product.id} product={product} />)}</div> : <EmptyProducts />}
+          {products.length > 0 ? <div className="grid grid-cols-2 gap-x-5 gap-y-9 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-7">{products.map(product => <ProductCard key={product.id} product={product} />)}</div> : <EmptyProducts />}
         </div>
         {products.length > 0 && <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#e9e4db] pt-6 sm:flex-row"><p className="text-xs text-slate-500">Noch mehr aus der Welt von NACHTKRONE.</p><Link href={PUBLIC_ROUTES.products} className="inline-flex min-h-11 items-center gap-3 text-xs font-semibold text-[#8b6533] hover:text-[#07111f] focus-visible:outline-2 focus-visible:outline-offset-4">Die gesamte Kollektion entdecken <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div>}
       </div>
