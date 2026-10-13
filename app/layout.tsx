@@ -30,6 +30,7 @@ const geistMono = Geist_Mono({
    ========================================================= */
 
 export const metadata: Metadata = {
+  other: { google: "notranslate" },
   /* -------------------------------------------------------
      TITRE
      ------------------------------------------------------- */
@@ -187,7 +188,8 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      translate="no"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased notranslate`}
     >
       <body className="flex min-h-full flex-col">
         {children}

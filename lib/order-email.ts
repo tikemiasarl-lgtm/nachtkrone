@@ -1,3 +1,4 @@
+import { createOrderConfirmationPdf } from "@/lib/order-pdf-binary";
 import {
   CHECKOUT_BRAND,
   CHECKOUT_CONTACT,
@@ -1717,32 +1718,11 @@ export function createOrderEmailBundle(
       data
     );
 
-  /*
-   * Le document fourni actuellement par order-pdf.ts
-   * contient sa source HTML complète.
-   *
-   * On ne ment pas sur son type :
-   * tant qu'un vrai Buffer PDF n'est pas retourné,
-   * la pièce jointe reste HTML.
-   */
-
-  const attachmentFilename =
-    document.filename.replace(
-      /\.pdf$/i,
-      ".html"
-    );
-
-  const customerAttachment:
-    OrderEmailAttachment = {
-      filename:
-        attachmentFilename,
-
-      content:
-        document.html,
-
-      contentType:
-        "text/html",
-    };
+  const customerAttachment: OrderEmailAttachment = {
+    filename: document.filename,
+    content: createOrderConfirmationPdf(data),
+    contentType: "application/pdf",
+  };
 
   return {
     admin: {
